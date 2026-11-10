@@ -1,0 +1,40 @@
+# --- Secrets: never commit credentials ---
+.env
+kaggle.json
+*.pem
+*-key.json
+
+# --- Terraform working files ---
+# .terraform/ holds downloaded providers (large, re-downloadable)
+.terraform/
+# State files record your real cloud resources and can hold sensitive values
+*.tfstate
+*.tfstate.*
+# Plan files saved with "terraform plan -out"
+*.tfplan
+
+# --- Data: downloaded or generated, never committed ---
+data/
+*.csv
+*.parquet
+*.zip
+
+# --- dbt build output (regenerated on every run) ---
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+
+# --- Python clutter ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Credentials files created by google-github-actions/auth in CI ---
+gha-creds-*.json
+
+# --- Mac and editor clutter ---
+.DS_Store
+.vscode/
