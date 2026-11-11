@@ -22,6 +22,9 @@ def build_job_config(file_path: Path) -> bigquery.LoadJobConfig:
         allow_quoted_newlines=True,
     )
 
+def table_name_from_stem(stem):
+    return stem.removeprefix('olist_').removesuffix('_dataset')
+
 def main():
     client = bigquery.Client()
     data_dir = Path(__file__).resolve().parent / 'Data' / 'olist_data'
@@ -30,7 +33,7 @@ def main():
         raise FileNotFoundError(f"No CSV files found in {data_dir}")
 
     for file_path in files:
-        table_id = f"{client.project}.raw.{file_path.stem}"
+        table_id = f"{client.project}.raw.{table_name_from_stem(file_path.stem)}"
         with open(file_path, 'rb') as source_file:
             job = client.load_table_from_file(
                 source_file, 
