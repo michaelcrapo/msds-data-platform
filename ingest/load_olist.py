@@ -27,7 +27,7 @@ def table_name_from_stem(stem):
 
 def main():
     client = bigquery.Client()
-    data_dir = Path(__file__).resolve().parent / 'Data' / 'olist_data'
+    data_dir = Path(__file__).resolve().parent / 'data' / 'olist_data'
     files = sorted(data_dir.glob("*.csv"))
     if not files:
         raise FileNotFoundError(f"No CSV files found in {data_dir}")
