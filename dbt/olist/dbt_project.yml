@@ -35,4 +35,6 @@ models:
     staging:
       # view stores query, not new data.  always reflects changes of the raw table
       +materialized: view 
+    intermediate:
+      +materialized: view
 
