@@ -17,6 +17,7 @@
 * begun the dbt process to create the ELT structure of the project.
     - create yaml files and sql code to safely upload views.  yml files will be read to cast tests on data efficacy as it is uploaded
 * learned about nuanced testing with dbt_utils.  Needed to test 2 columns as keys to define a unique record in order_items.
+* payment_installments has value of "0" in 2 records.  deemed erroneous as Kaggle doesnt report a purpose for this value and no meaningful description could be descerned.
 
 # key command line prompts:
     ### pip, conda, source control

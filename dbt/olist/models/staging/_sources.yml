@@ -92,6 +92,12 @@ sources:
             description: Payment number within the order.
             data_tests:
               - not_null
+          - name: payment_type
+            description: Payment method, such as credit_card, boleto, voucher or debit_card.
+          - name: payment_installments
+            description: Number of installments the customer chose. Raw string, cast to INT64 in staging.
+          - name: payment_value
+            description: Amount paid in this payment, in Brazilian reais (BRL). Raw string, cast to NUMERIC in staging.
 
       - name: order_reviews
         description: >
