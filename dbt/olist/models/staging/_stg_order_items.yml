@@ -36,10 +36,10 @@ models:
         description: Links to stg_sellers.
         data_tests:
           - not_null
-          # - relationships:
-          #     arguments:
-          #       to: ref('stg_sellers')
-          #       field: seller_id
+          - relationships:
+              arguments:
+                to: ref('stg_sellers')
+                field: seller_id
       - name: shipping_limit_at
         description: >
           The seller shipping limit date for handling the order 
