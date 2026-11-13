@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: stg_products
+    description: >
+      One row per product.  610 products have no category, name, or description details
+      and 2 have no weight or dimensions.
+    columns:
+      - name: product_id
+        description: Primary key. One row per product.
+        data_tests:
+          - unique
+          - not_null
+      - name: product_category_name
+        description: > 
+          Product type in Portuguese.  
+          Can be null.  
+          use stg_product_categories for Eng translation
+      - name: product_name_length
+        description: >
+          Number of characters in product name.
+          raw table spelled "lenght" as og source has it that way
+      - name: product_description_length
+        description: >
+          Number of characters in product description
+          raw table spelled "lenght" as og source has it that way
+      - name: product_photos_qty
+        description: Number of product published photos
+      - name: product_weight_g
+        description: Product weight measured in grams.
+      - name: product_length_cm
+        description: Product length measured in centimeters.
+      - name: product_height_cm
+        description: Product height measured in centimeters.
+      - name: product_width_cm
+        description: Product width measured in centimeters.

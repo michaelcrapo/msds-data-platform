@@ -17,7 +17,12 @@
 * begun the dbt process to create the ELT structure of the project.
     - create yaml files and sql code to safely upload views.  yml files will be read to cast tests on data efficacy as it is uploaded
 * learned about nuanced testing with dbt_utils.  Needed to test 2 columns as keys to define a unique record in order_items.
+
+## 2026.11.13
 * payment_installments has value of "0" in 2 records.  deemed erroneous as Kaggle doesnt report a purpose for this value and no meaningful description could be descerned.
+* created intermediary table using the staging tables assessed.  Designed so filters are predefined for downstream users, but no filtering performed.  Caveat in the order reviews, as on order can have mulitple reviews, 1 review can be for multiple orders: defined single review for 1 order based whichever was the latest review.
+* in int_orders: created filter features such as "is_delivered" so end-user can select only complete orders.  created delivery_delay_days to determine delinquate orders for later analysis. created main_payment_type using agg_array so can create feature that defines the key payment form (such as credit card) based on most amount spent in order.  created the payment_difference column to see interest pmts received from people who finance. 
+
 
 # key command line prompts:
     ### pip, conda, source control

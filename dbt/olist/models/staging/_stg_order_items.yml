@@ -28,10 +28,10 @@ models:
         description: Links to stg_products.
         data_tests:
           - not_null
-          # - relationships:
-          #     arguments:
-          #       to: ref('stg_products')
-          #       field: product_id
+          - relationships:
+              arguments:
+                to: ref('stg_products')
+                field: product_id
       - name: seller_id
         description: Links to stg_sellers.
         data_tests:
