@@ -15,6 +15,10 @@ models:
         description: Links to stg_customers.
         data_tests:
           - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customers')
+                field: customer_id
       - name: order_status
         description: Order status.
         data_tests:

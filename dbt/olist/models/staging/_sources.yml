@@ -68,6 +68,12 @@ sources:
                   arguments:
                     to: source('raw', 'sellers')
                     field: seller_id
+          - name: shipping_limit_date
+            description: Deadline for the seller to hand the item to the carrier. Raw string, cast to DATETIME in staging.
+          - name: price
+            description: Item price in Brazilian reais (BRL), excluding freight. Raw string, cast to NUMERIC in staging.
+          - name: freight_value
+            description: Freight cost for this item in BRL; an order's freight is split across its items. Raw string, cast to NUMERIC in staging.
 
       - name: order_payments
         description: >

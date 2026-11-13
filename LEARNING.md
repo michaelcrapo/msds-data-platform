@@ -16,6 +16,7 @@
 * assessed typical ratings per product.  Found that 
 * begun the dbt process to create the ELT structure of the project.
     - create yaml files and sql code to safely upload views.  yml files will be read to cast tests on data efficacy as it is uploaded
+* learned about nuanced testing with dbt_utils.  Needed to test 2 columns as keys to define a unique record in order_items.
 
 # key command line prompts:
     ### pip, conda, source control
@@ -29,6 +30,7 @@
     - git status >> list the updates that are waiting to be commited
     - git commit -m "COMMIT TITLE"
     - git push
+        > or git push -u origin BRANCH_NAME
     - gh pr create --base main --title "" --body ""
     - gh pr merge --merge --delete-branch
     - git rm --cached filename >> remove a specific file or folder from branch
