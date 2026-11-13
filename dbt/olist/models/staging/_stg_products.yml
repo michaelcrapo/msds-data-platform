@@ -16,6 +16,13 @@ models:
           Product type in Portuguese.  
           Can be null.  
           use stg_product_categories for Eng translation
+        data_tests:
+            - relationships:
+                arguments:
+                  to: ref('stg_product_categories')
+                  field: product_category_name
+                config:
+                  severity: warn
       - name: product_name_length
         description: >
           Number of characters in product name.
