@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: >
+      One row per order, all statuses. Timestamps are DATETIME in Brazilian
+      local time (no time zone).
+    columns:
+      - name: order_id
+        description: Primary Key.
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Links to stg_customers.
+        data_tests:
+          - not_null
+      - name: order_status
+        description: Order status.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['delivered', 'shipped', 'canceled', 'unavailable',
+                         'invoiced', 'processing', 'created', 'approved']
+
+      - name: purchased_at
+        description: When the customer placed the order.
+        data_tests:
+          - not_null
+
+      - name: approved_at
+        description: When payment was approved. Null for some orders that were never approved, such as canceled ones.
+
+      - name: delivered_carrier_at
+        description: When the seller handed the order to the carrier. Null if not yet shipped.
+
+      - name: delivered_customer_at
+        description: When the customer received the order. Null if not delivered.
+
+      - name: estimated_delivery_date
+        description: Delivery date promised to the customer at purchase.
+        data_tests:
+          - not_null

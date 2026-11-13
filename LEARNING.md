@@ -13,7 +13,9 @@
 ## 2026.11.12
 * tested to see if classic 80/20 rule came showed up in product rev/order totals
     - if looking at total revenue and total order count, ~22% comes from repurchasers, ~17% rev comes from repurchasers
-* assessed typical ratings per product.  Found that lower 
+* assessed typical ratings per product.  Found that 
+* begun the dbt process to create the ELT structure of the project.
+    - create yaml files and sql code to safely upload views.  yml files will be read to cast tests on data efficacy as it is uploaded
 
 # key command line prompts:
     ### pip, conda, source control
@@ -33,6 +35,8 @@
     - git switch main >> change the branch we are editing in
         > switch -c NAME > switch to and create new branch
     - git pull >> pull the most up to date code on the current branch
+    - git branch --show-current > show current branch
+    - git add -A > stages everything in the entire repo
 
     
     ### PyTest

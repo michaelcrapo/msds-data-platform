@@ -1,0 +1,180 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Olist Brazilian e-commerce data (2016 to 2018), loaded from Kaggle into BigQuery as all-STRING tables by ingest/load_olist.py.
+    tables:
+      - name: customers
+        description: >
+          One row per customer_id. Olist creates a new customer_id for every order,
+          so one person can have several rows; customer_unique_id identifies the person.
+        columns:
+          - name: customer_id
+            description: Primary key. Links to orders.customer_id.
+            data_tests:
+              - unique
+              - not_null
+          - name: customer_unique_id
+            description: Identifies a person across orders. Not unique in this table.
+            data_tests:
+              - not_null
+          - name: customer_zip_code_prefix
+            description: First five digits of the customer's Brazilian zip code (CEP). Stored as a string to keep leading zeros.
+          - name: customer_city
+            description: Customer city name.
+          - name: customer_state
+            description: Two-letter Brazilian state code.
+
+      - name: geolocation
+        description: >
+          Latitude and longitude for zip code prefixes. Several rows per prefix,
+          so there is no unique key; aggregate before joining.
+        columns:
+          - name: geolocation_zip_code_prefix
+            description: First five digits of a Brazilian zip code. Repeats across rows.
+            data_tests:
+              - not_null
+
+      - name: order_items
+        description: >
+          One row per item within an order. An order with 3 units of a product has
+          3 rows. Key is order_id + order_item_id.
+        columns:
+          - name: order_id
+            description: Links to orders.
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'orders')
+                    field: order_id
+          - name: order_item_id
+            description: Item number within the order (1, 2, 3...).
+            data_tests:
+              - not_null
+          - name: product_id
+            description: Links to products.
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'products')
+                    field: product_id
+          - name: seller_id
+            description: Links to sellers.
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'sellers')
+                    field: seller_id
+
+      - name: order_payments
+        description: >
+          One row per payment within an order; an order can be split across several
+          payments or payment types. Key is order_id + payment_sequential.
+        columns:
+          - name: order_id
+            description: Links to orders.
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'orders')
+                    field: order_id
+          - name: payment_sequential
+            description: Payment number within the order.
+            data_tests:
+              - not_null
+
+      - name: order_reviews
+        description: >
+          Customer reviews of orders. Neither review_id nor order_id is unique on its
+          own here; check the duplicates before choosing a grain in staging.
+        columns:
+          - name: review_id
+            description: Review identifier. Not unique in the raw data.
+            data_tests:
+              - not_null
+          - name: order_id
+            description: Links to orders.
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'orders')
+                    field: order_id
+          - name: review_score
+            description: Rating from 1 to 5.
+            data_tests:
+              - not_null
+              - accepted_values:
+                  arguments:
+                    values: ['1', '2', '3', '4', '5']
+
+      - name: orders
+        description: One row per order, across all statuses, including canceled and unavailable orders.
+        columns:
+          - name: order_id
+            description: Primary key.
+            data_tests:
+              - unique
+              - not_null
+          - name: customer_id
+            description: Links to customers. One customer_id per order.
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('raw', 'customers')
+                    field: customer_id
+          - name: order_status
+            description: Order status, such as delivered, shipped, canceled or unavailable.
+            data_tests:
+              - not_null
+
+      - name: product_category_name_translation
+        description: One row per product category, mapping the Portuguese name to English.
+        columns:
+          - name: product_category_name
+            description: Category name in Portuguese. Primary key.
+            data_tests:
+              - unique
+              - not_null
+          - name: product_category_name_english
+            description: Category name in English.
+
+      - name: products
+        description: >
+          One row per product. Note the source misspells two columns as
+          product_name_lenght and product_description_lenght; fix the names in staging.
+        columns:
+          - name: product_id
+            description: Primary key.
+            data_tests:
+              - unique
+              - not_null
+          - name: product_category_name
+            description: Category in Portuguese. Not every category appears in the translation table.
+            data_tests:
+              - relationships:
+                  arguments:
+                    to: source('raw', 'product_category_name_translation')
+                    field: product_category_name
+                  config:
+                    severity: warn
+
+      - name: sellers
+        description: One row per seller.
+        columns:
+          - name: seller_id
+            description: Primary key.
+            data_tests:
+              - unique
+              - not_null
+          - name: seller_zip_code_prefix
+            description: First five digits of the seller's Brazilian zip code. Stored as a string to keep leading zeros.
+          - name: seller_city
+            description: Seller city name.
+          - name: seller_state
+            description: Two-letter Brazilian state code.
