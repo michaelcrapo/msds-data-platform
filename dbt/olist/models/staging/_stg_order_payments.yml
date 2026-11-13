@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: stg_order_payments
+    description: >
+        One row per payment within an order; an order can be split across several
+        payments or payment types. Key is order_id + payment_sequential.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - order_id
+              - payment_sequential
+    columns:
+      - name: order_id
+        description: Links to stg_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: payment_sequential
+        description: Payment number within the order.
+        data_tests:
+          - not_null
+      - name: payment_type
+        description: Method of payment chosen by the customer.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["credit_card", "boleto", "voucher", "debit_card", "not_defined"]
+      - name: payment_installments
+        description: >
+          Number of installments chosen by the customer. 1 means paid in full;
+          0 appears in two credit card payments and is likely a data error.
+        data_tests:
+          - not_null
+      - name: payment_value
+        description: Amount paid in this transaction, in Brazilian reais (BRL)
+        data_tests:
+          - not_null

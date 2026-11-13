@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: stg_order_reviews
+    description: >
+        One row per review and order pair. Some reviews cover several orders, 
+        and some orders have several reviews. int_orders keeps the latest review per order, 
+        by review_answer_at
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - review_id
+              - order_id
+    columns:
+      - name: review_id
+        description: Review identifier. Not unique in the raw data.
+        data_tests:
+          - not_null
+      - name: order_id
+        description: Links to stg_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: review_score
+        description: Rating from 1 to 5.
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                quote: false
+                values: [1, 2, 3, 4, 5]
+
+      - name: review_comment_title
+        description: Comment title from the review left by the customer, in Portuguese.
+      - name: review_comment_message
+        description: Comment message from the review left by the customer, in Portuguese.
+      - name: review_creation_date
+        description: Date the satisfaction survey was sent to the customer
+      - name: review_answer_at
+        description: Shows satisfaction survey answer timestamp.
+  
+          

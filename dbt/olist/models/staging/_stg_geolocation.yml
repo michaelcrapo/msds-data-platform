@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: stg_geolocation
+    description: >
+      Latitude and longitude samples for Brazilian zip code prefixes. Several rows
+      per prefix (one per sampled address), so there is no unique key. Aggregate to
+      one row per prefix before joining to customers or sellers, or the join will
+      duplicate rows. A few rows have coordinates outside Brazil; filter them out
+      before averaging.
+    columns:
+      - name: geolocation_zip_code_prefix
+        description: First five digits of a Brazilian zip code (CEP). Stored as a string to keep leading zeros. Repeats across rows.
+        data_tests:
+          - not_null
+
+      - name: geolocation_lat
+        description: Latitude in decimal degrees. Negative values are south of the equator.
+        data_tests:
+          - not_null
+
+      - name: geolocation_lng
+        description: Longitude in decimal degrees. Negative values are west of Greenwich.
+        data_tests:
+          - not_null
+
+      - name: geolocation_city
+        description: City name for this sample. Spelling can vary between rows for the same prefix.
+
+      - name: geolocation_state
+        description: Two-letter Brazilian state code.

@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: > 
+          One row per customer_id. Olist creates a new customer_id for every order,
+          so one person can have several rows; customer_unique_id identifies the person.
+    columns:
+      - name: customer_id
+        description: Primary key. Links to stg_orders.customer_id.
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_unique_id
+        description: Identifies a person across orders. Not unique in this table.
+        data_tests:
+          - not_null
+      - name: customer_zip_code_prefix
+        description: First five digits of the customer's Brazilian zip code (CEP). Stored as a string to keep leading zeros.
+      - name: customer_city
+        description: Customer city name.
+      - name: customer_state
+        description: Two-letter Brazilian state code.
+    

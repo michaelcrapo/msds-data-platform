@@ -1,0 +1,83 @@
+version: 2
+
+models:
+  - name: int_orders
+    description: >
+      One row per order, across all statuses. Joins stg_orders to the customer's
+      customer_unique_id and to order-level summaries of items, payments and the
+      latest review. Items and payments are aggregated, and reviews reduced to the
+      latest per order (by review_answer_at), before joining, so joins cannot
+      duplicate orders. Filter on is_delivered downstream rather than here.
+    columns:
+      - name: order_id
+        description: Primary key. One row per order.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        description: Order-level customer ID from stg_orders. A new one is created for every order.
+        data_tests:
+          - not_null
+
+      - name: customer_unique_id
+        description: Identifies the person who placed the order. Use this for customer-level features.
+        data_tests:
+          - not_null
+
+      - name: order_status
+        description: Order status from stg_orders.
+
+      - name: is_delivered
+        description: True if order_status is delivered.
+        data_tests:
+          - not_null
+
+      - name: item_count
+        description: Number of item rows in the order. Null if the order has no items, such as some canceled orders.
+
+      - name: total_price
+        description: Sum of item prices, in BRL, excluding freight.
+
+      - name: total_freight_value
+        description: Sum of freight across the order's items, in BRL.
+
+      - name: order_total
+        description: total_price plus total_freight_value, in BRL.
+
+      - name: total_paid
+        description: Sum of all payments for the order, in BRL.
+
+      - name: number_of_payments
+        description: Number of payment rows for the order.
+
+      - name: payment_type_count
+        description: Number of distinct payment types used. Above 1 means a split payment.
+
+      - name: main_payment_type
+        description: Payment type that paid the most money; ties go to the earlier payment_sequential.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['credit_card', 'boleto', 'voucher', 'debit_card', 'not_defined']
+
+      - name: payment_difference
+        description: >
+          total_paid minus order_total, in BRL. Usually near 0; installment
+          interest and vouchers can make it differ.
+
+      - name: review_score
+        description: Score from the order's latest review, 1 to 5. Null if the order has no review.
+        data_tests:
+          - accepted_values:
+              arguments:
+                quote: false
+                values: [1, 2, 3, 4, 5]
+
+      - name: has_review_comment
+        description: True if the latest review includes a written comment.
+
+      - name: delivery_delay_days
+        description: >
+          Days between actual and estimated delivery. Positive means late, negative
+          means early, null if not delivered.

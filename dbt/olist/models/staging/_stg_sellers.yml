@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: stg_sellers
+    description: >
+      One row per seller.
+    columns:
+      - name: seller_id
+        description: Primary key. One row per seller.
+        data_tests:
+          - unique
+          - not_null
+      - name: seller_zip_code_prefix
+        description: >
+          first 5 digits of seller zip code.  
+          stored as a string to keep leading zeros
+        data_tests:
+          - not_null
+      - name: seller_city
+        description: Seller city name
+        data_tests:
+          - not_null
+      - name: seller_state
+        description: Seller state
+        data_tests:
+          - not_null
+
+      

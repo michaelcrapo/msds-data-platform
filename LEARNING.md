@@ -13,7 +13,16 @@
 ## 2026.11.12
 * tested to see if classic 80/20 rule came showed up in product rev/order totals
     - if looking at total revenue and total order count, ~22% comes from repurchasers, ~17% rev comes from repurchasers
-* assessed typical ratings per product.  Found that lower 
+* assessed typical ratings per product.  Found that 
+* begun the dbt process to create the ELT structure of the project.
+    - create yaml files and sql code to safely upload views.  yml files will be read to cast tests on data efficacy as it is uploaded
+* learned about nuanced testing with dbt_utils.  Needed to test 2 columns as keys to define a unique record in order_items.
+
+## 2026.11.13
+* payment_installments has value of "0" in 2 records.  deemed erroneous as Kaggle doesnt report a purpose for this value and no meaningful description could be descerned.
+* created intermediary table using the staging tables assessed.  Designed so filters are predefined for downstream users, but no filtering performed.  Caveat in the order reviews, as on order can have mulitple reviews, 1 review can be for multiple orders: defined single review for 1 order based whichever was the latest review.
+* in int_orders: created filter features such as "is_delivered" so end-user can select only complete orders.  created delivery_delay_days to determine delinquate orders for later analysis. created main_payment_type using agg_array so can create feature that defines the key payment form (such as credit card) based on most amount spent in order.  created the payment_difference column to see interest pmts received from people who finance. 
+
 
 # key command line prompts:
     ### pip, conda, source control
@@ -27,12 +36,15 @@
     - git status >> list the updates that are waiting to be commited
     - git commit -m "COMMIT TITLE"
     - git push
+        > or git push -u origin BRANCH_NAME
     - gh pr create --base main --title "" --body ""
     - gh pr merge --merge --delete-branch
     - git rm --cached filename >> remove a specific file or folder from branch
     - git switch main >> change the branch we are editing in
         > switch -c NAME > switch to and create new branch
     - git pull >> pull the most up to date code on the current branch
+    - git branch --show-current > show current branch
+    - git add -A > stages everything in the entire repo
 
     
     ### PyTest

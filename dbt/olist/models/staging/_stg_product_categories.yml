@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: stg_product_categories
+    description: >
+      One row per product category, mapping the Portuguese name to English.
+    columns:
+      - name: product_category_name
+        description: Product category name in Portuguese
+        data_tests:
+          - not_null
+          - unique
+      - name: product_category_name_english
+        description: Product category name in English
+        data_tests:
+          - not_null
+          - unique
